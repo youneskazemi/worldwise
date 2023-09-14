@@ -1,6 +1,6 @@
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
 import styles from "./Form.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useUrlLocation } from "../hooks/useUrlLocation";
 
 import Button from "./Button";
@@ -18,21 +18,65 @@ export function convertToEmoji(countryCode) {
 
 const BASE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 
+const initialState = {
+  cityName: "",
+  country: "",
+  date: new Date(),
+  notes: "",
+  error: "",
+  emoji: "",
+  isLoading: true,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "start":
+      return { ...state, isLoading: true, error: "" };
+    case "dataRecieved":
+      const data = action.payload;
+      return {
+        ...state,
+        cityName: data.city || data.locality || "",
+        country: data.countryName,
+        emoji: convertToEmoji(data.countryCode),
+      };
+    case "error":
+      return { ...state, error: action.payload };
+
+    case "finished":
+      return { ...state, isLoading: false };
+
+    case "setCity":
+      return { ...state, cityName: action.payload };
+    case "setDate":
+      return { ...state, date: action.payload };
+    case "setNotes":
+      return { ...state, notes: action.payload };
+    default:
+      throw new Error("Invalid action");
+  }
+};
+
 function Form() {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [lat, lng] = useUrlLocation();
-  const [cityName, setCityName] = useState("");
-  const [country, setCountry] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [notes, setNotes] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [emoji, setEmoji] = useState("");
+  // const [cityName, setCityName] = useState("");
+  // const [country, setCountry] = useState("");
+  // const [date, setDate] = useState(new Date());
+  // const [notes, setNotes] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
+  // const [emoji, setEmoji] = useState("");
+
+  const { cityName, country, date, notes, isLoading, error, emoji } = state;
 
   useEffect(() => {
     const fetchCityData = async () => {
       try {
-        setIsLoading(true);
-        setError("");
+        // setIsLoading(true);
+        // setError("");
+
+        dispatch({ type: "start" });
 
         const res = await fetch(`${BASE_URL}?latitude=${lat}&longitude=${lng}`);
         const data = await res.json();
@@ -41,13 +85,15 @@ function Form() {
           throw new Error(
             "That doesn't seem to be a city, Click somewhere else!"
           );
-        setCityName(data.city || data.locality || "");
-        setCountry(data.countryName);
-        setEmoji(convertToEmoji(data.countryCode));
+        // setCityName(data.city || data.locality || "");
+        // setCountry(data.countryName);
+        // setEmoji(convertToEmoji(data.countryCode));
+        dispatch({ type: "dataRecieved", payload: data });
       } catch (e) {
-        setError(e.message);
+        // setError(e.message);
+        dispatch({ type: "error", payload: e.message });
       } finally {
-        setIsLoading(false);
+        dispatch({ type: "finished" });
       }
     };
     fetchCityData();
@@ -62,7 +108,9 @@ function Form() {
         <label htmlFor="cityName">City name</label>
         <input
           id="cityName"
-          onChange={(e) => setCityName(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "setCity", payload: e.target.value })
+          }
           value={cityName}
         />
         <span className={styles.flag}>{emoji}</span>
@@ -72,7 +120,9 @@ function Form() {
         <label htmlFor="date">When did you go to {cityName}?</label>
         <input
           id="date"
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "setDate", payload: e.target.value })
+          }
           value={date}
         />
       </div>
@@ -81,7 +131,9 @@ function Form() {
         <label htmlFor="notes">Notes about your trip to {cityName}</label>
         <textarea
           id="notes"
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "setNotes", payload: e.target.value })
+          }
           value={notes}
         />
       </div>
