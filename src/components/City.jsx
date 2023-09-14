@@ -1,6 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import styles from "./City.module.css";
 import { useEffect, useState } from "react";
+import { useCities } from "../contexts/CitiesContext";
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -10,7 +11,8 @@ const formatDate = (date) =>
     weekday: "long",
   }).format(new Date(date));
 
-function City({ cities }) {
+function City() {
+  const { cities } = useCities();
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
