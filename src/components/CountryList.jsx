@@ -15,7 +15,6 @@ function CountryList({ cities, isLoading }) {
     else return arr;
   }, []);
 
-  console.log(countries);
   return (
     <ul className={styles.countryList}>
       {countries.map((country, index) => (
