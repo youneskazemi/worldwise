@@ -1,13 +1,7 @@
-import PropTypes from "react";
 import Spinner from "./Spinner";
 import CityItem from "./CityItem";
 import Message from "./Message";
 import styles from "./CityList.module.css";
-
-CityList.propTypes = {
-  cities: PropTypes.list,
-  isLoading: PropTypes.bool,
-};
 
 function CityList({ cities, isLoading }) {
   if (isLoading) return <Spinner />;

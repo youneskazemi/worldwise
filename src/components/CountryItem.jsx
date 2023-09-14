@@ -1,9 +1,4 @@
-import PropTypes from "react";
 import styles from "./CountryItem.module.css";
-
-CountryItem.propTypes = {
-  country: PropTypes.object,
-};
 
 function CountryItem({ country }) {
   return (
