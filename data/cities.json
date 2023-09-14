@@ -47,6 +47,18 @@
         "lng": 13.376933665713324
       },
       "id": 98443197
+    },
+    {
+      "cityName": "Shiraz",
+      "country": "Iran (Islamic Republic of)",
+      "emoji": "🇮🇷",
+      "date": "2023-09-14T16:46:19.431Z",
+      "notes": "was fun",
+      "position": {
+        "lat": "29.594953690210986",
+        "lng": "52.55019062173978"
+      },
+      "id": 98443198
     }
   ]
 }

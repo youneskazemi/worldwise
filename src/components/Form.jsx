@@ -7,6 +7,9 @@ import Button from "./Button";
 import ButtonBack from "./ButtonBack";
 import Spinner from "./Spinner";
 import Message from "./Message";
+import ReactDatePicker from "react-datepicker";
+import { useNavigate } from "react-router-dom";
+import { useCities } from "../contexts/CitiesContext";
 
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -59,11 +62,13 @@ const reducer = (state, action) => {
 
 function Form() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
   const [lat, lng] = useUrlLocation();
-
-  const { cityName, country, date, notes, isLoading, error, emoji } = state;
+  const { createCity } = useCities();
+  const { cityName, date, notes, isLoading, error, emoji, country } = state;
 
   useEffect(() => {
+    if (!lat && !lng) return;
     const fetchCityData = async () => {
       try {
         dispatch({ type: "start" });
@@ -86,11 +91,31 @@ function Form() {
     fetchCityData();
   }, [lat, lng]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!cityName || !date) return;
+
+    const newCity = {
+      cityName,
+      country,
+      emoji,
+      date,
+      notes,
+      position: { lat, lng },
+    };
+
+    await createCity(newCity);
+    navigate("/app/cities");
+  };
+
   if (isLoading) return <Spinner />;
+  if (!lat && !lng)
+    return <Message message="start by clicking somewhere in the map" />;
   if (error) return <Message message={error} />;
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -105,12 +130,11 @@ function Form() {
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input
+        <ReactDatePicker
           id="date"
-          onChange={(e) =>
-            dispatch({ type: "setDate", payload: e.target.value })
-          }
-          value={date}
+          selected={date}
+          onChange={(date) => dispatch({ type: "setDate", payload: date })}
+          dateFormat="yyyy-MM-dd"
         />
       </div>
 
