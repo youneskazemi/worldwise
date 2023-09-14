@@ -1,6 +1,6 @@
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
 import styles from "./Form.module.css";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useUrlLocation } from "../hooks/useUrlLocation";
 
 import Button from "./Button";
@@ -60,22 +60,12 @@ const reducer = (state, action) => {
 function Form() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [lat, lng] = useUrlLocation();
-  // const [cityName, setCityName] = useState("");
-  // const [country, setCountry] = useState("");
-  // const [date, setDate] = useState(new Date());
-  // const [notes, setNotes] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState("");
-  // const [emoji, setEmoji] = useState("");
 
   const { cityName, country, date, notes, isLoading, error, emoji } = state;
 
   useEffect(() => {
     const fetchCityData = async () => {
       try {
-        // setIsLoading(true);
-        // setError("");
-
         dispatch({ type: "start" });
 
         const res = await fetch(`${BASE_URL}?latitude=${lat}&longitude=${lng}`);
@@ -85,12 +75,9 @@ function Form() {
           throw new Error(
             "That doesn't seem to be a city, Click somewhere else!"
           );
-        // setCityName(data.city || data.locality || "");
-        // setCountry(data.countryName);
-        // setEmoji(convertToEmoji(data.countryCode));
+
         dispatch({ type: "dataRecieved", payload: data });
       } catch (e) {
-        // setError(e.message);
         dispatch({ type: "error", payload: e.message });
       } finally {
         dispatch({ type: "finished" });
