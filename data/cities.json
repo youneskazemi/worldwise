@@ -47,30 +47,6 @@
         "lng": "59.61730957031251"
       },
       "id": 98443200
-    },
-    {
-      "cityName": "Nowshahr",
-      "country": "Iran (Islamic Republic of)",
-      "emoji": "🇮🇷",
-      "date": "2023-09-15T07:21:03.734Z",
-      "notes": "chilldhood",
-      "position": {
-        "lat": "36.54494944148322",
-        "lng": "51.80603027343751"
-      },
-      "id": 98443201
-    },
-    {
-      "cityName": "Tehran",
-      "country": "Iran (Islamic Republic of)",
-      "emoji": "🇮🇷",
-      "date": "2023-09-15T07:21:03.734Z",
-      "notes": "dirt city",
-      "position": {
-        "lat": "35.66622234103479",
-        "lng": "51.38305664062501"
-      },
-      "id": 98443202
     }
   ]
 }
