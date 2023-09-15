@@ -54,7 +54,7 @@ function CitiesProvider({ children }) {
         const data = await res.json();
         dispatch({ type: "cities/loaded", payload: data });
       } catch {
-        alert("Something went wrong...");
+        dispatch({ type: "error", payload: "Something went wrong..." });
       }
     };
 
@@ -69,7 +69,7 @@ function CitiesProvider({ children }) {
       const data = await res.json();
       dispatch({ type: "city/loaded", payload: data });
     } catch {
-      alert("Something went wrong...");
+      dispatch({ type: "error", payload: "Something went wrong..." });
     }
   }
 
@@ -85,7 +85,7 @@ function CitiesProvider({ children }) {
       const data = await res.json();
       dispatch({ type: "city/created", payload: data });
     } catch {
-      alert("Something went wrong...");
+      dispatch({ type: "error", payload: "Something went wrong..." });
     }
   }
 
@@ -98,7 +98,7 @@ function CitiesProvider({ children }) {
 
       dispatch({ type: "city/deleted", payload: id });
     } catch {
-      alert("Something went wrong...");
+      dispatch({ type: "error", payload: "Something went wrong..." });
     }
   }
   return (
